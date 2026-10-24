@@ -1,13 +1,27 @@
-# AI 工具导航（ToolNav）
+# AITOOLS
 
-深色极简风格的 AI 工具导航网站。单文件 HTML、零依赖，收录 41 款常用 AI 工具，支持分类浏览、搜索与收藏。
+深色极简风格的 AI 工具导航站。单文件 HTML、零依赖，收录 41 款常用 AI 工具，支持 **5 种语言**、分类浏览、搜索与收藏。
+
+**线上地址**：https://matongqiao-lab.github.io/aitools/
 
 ## 功能
 
 - 6 大分类：对话助手 / AI 绘图 / AI 视频 / AI 音频 / 编程开发 / 办公效率
-- 搜索（名称 / 简介 / 标签）、分类筛选、收藏（localStorage 持久化）
+- 5 种语言切换：简体中文、繁體中文、English、日本語、한국어
+  - 界面文案、分类名、标签、41 条工具简介全部随语言切换
+  - 首次访问按浏览器语言自动匹配，手动选择后写入 localStorage
+- 搜索（名称 / 简介 / 标签，按当前语言检索）、分类筛选、收藏（localStorage 持久化）
 - 三类广告位：顶部横幅 970×90、信息流 300×250、底部横幅 728×90
 - 响应式布局，桌面 / 移动端自适应
+
+## 多语言扩展
+
+新增语言只需两步：
+
+1. 在 `LANG_ORDER` 与 `LANGS` 中追加语言代码与显示名；
+2. 补充 `UI`、`DESC` 两处文案（`CATS` 与 `TAGS` 为按 `LANG_ORDER` 顺序排列的数组，追加一项即可）。
+
+框架已预留 `es` / `fr` / `de` / `pt` / `ru` 的界面文案，补齐对应 `DESC` 后把语言代码加进 `LANG_ORDER` 即可启用。
 
 ## 广告接入
 
@@ -21,7 +35,13 @@
 
 直接双击 `index.html` 即可在浏览器打开，无需安装任何依赖。
 
-## Vercel 部署
+## 部署
+
+### GitHub Pages（当前使用）
+
+仓库 Settings → Pages → Source 选 `Deploy from a branch`，Branch 选 `main`，目录 `/ (root)`，保存后自动构建。
+
+### Vercel
 
 1. 将本仓库导入 Vercel（Import Repository，代码源选择 GitHub）；
 2. Framework Preset 选择 `Other`，Build Command 与 Output Directory 留空；
