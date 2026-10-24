@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI 工具导航 — 精选 AI 工具集</title>
+<meta name="description" content="深色极简的 AI 工具导航站：按分类收录对话、绘图、视频、音频、编程与办公效率工具，支持搜索与收藏。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230A0E15'/%3E%3Ccircle cx='32' cy='32' r='16' fill='none' stroke='%234FD1C5' stroke-width='6'/%3E%3Ccircle cx='32' cy='32' r='5' fill='%234FD1C5'/%3E%3C/svg%3E">
+<style>
+/* ===== 基础 ===== */
+:root{
+  --bg:#0A0E15;
+  --surface:#10161F;
+  --surface-2:#141C27;
+  --border:#1E2A38;
+  --text:#E6EDF3;
+  --dim:#8B9BB0;
+  --accent:#4FD1C5;
+  --accent-soft:rgba(79,209,197,.10);
+  --star:#E8B54A;
+  --radius:12px;
+  --font:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:var(--font);font-size:15px;line-height:1.6;
+  min-height:100vh;
+}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+::selection{background:var(--accent-soft)}
+
+/* ===== 布局骨架 ===== */
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+
+/* ===== 顶栏 ===== */
+.site-header{
+  position:sticky;top:0;z-index:20;
+  background:rgba(10,14,21,.86);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);
+}
+.header-row{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 0;flex-wrap:wrap;
+}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.brand-mark{
+  width:34px;height:34px;border-radius:9px;flex:none;
+  display:grid;place-items:center;
+  background:var(--surface-2);border:1px solid var(--border);
+}
+.brand-name{font-size:16px;font-weight:700;letter-spacing:.01em;white-space:nowrap}
+.brand-sub{display:block;font-size:10px;color:var(--dim);font-family:var(--mono);letter-spacing:.18em}
+.search-box{
+  flex:1 1 220px;display:flex;align-items:center;gap:8px;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:999px;padding:0 14px;min-width:0;
+  transition:border-color .15s ease;
+}
+.search-box:focus-within{border-color:var(--accent)}
+.search-box svg{flex:none;opacity:.55}
+.search-box input{
+  flex:1;min-width:0;background:none;border:0;outline:0;
+  color:var(--text);font-size:16px;padding:9px 0;
+}
+.search-box input::placeholder{color:var(--dim)}
+.fav-toggle{
+  flex:none;display:inline-flex;align-items:center;gap:6px;
+  padding:9px 14px;border:1px solid var(--border);border-radius:999px;
+  background:var(--surface);font-size:14px;color:var(--dim);
+  transition:border-color .15s ease,color .15s ease;
+}
+.fav-toggle:hover{border-color:var(--star);color:var(--text)}
+.fav-toggle[aria-pressed="true"]{border-color:var(--star);color:var(--star);background:rgba(232,181,74,.08)}
+
+/* 顶部横幅广告位 */
+.ad-slot{
+  position:relative;display:flex;align-items:center;justify-content:center;
+  background:var(--surface);border:1px dashed var(--border);
+  border-radius:var(--radius);color:var(--dim);
+  font-size:13px;text-align:center;padding:18px 12px;
+}
+.ad-tag{
+  position:absolute;top:8px;left:10px;
+  font-size:10px;font-family:var(--mono);letter-spacing:.1em;
+  color:var(--dim);border:1px solid var(--border);border-radius:4px;padding:0 5px;
+}
+.ad-slot[data-ad-slot="top-banner"]{margin:12px 0 4px}
+.ad-slot[data-ad-slot="bottom-banner"]{margin:28px 0 8px}
+
+/* ===== 主体：侧栏 + 网格 ===== */
+.layout{display:flex;gap:24px;padding-block:20px 8px}
+
+/* 分类侧栏 */
+.sidebar{width:190px;flex:none}
+.side-head{font-size:12px;color:var(--dim);letter-spacing:.06em;margin-bottom:10px}
+.cat-list{display:flex;flex-direction:column;gap:2px}
+.cat-btn{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  padding:8px 12px;border-radius:8px;font-size:14px;color:var(--dim);
+  transition:background .15s ease,color .15s ease;
+}
+.cat-btn:hover{background:var(--surface);color:var(--text)}
+.cat-btn[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.cat-count{font-family:var(--mono);font-size:11px;opacity:.7}
+.side-foot{margin-top:18px;padding-top:14px;border-top:1px solid var(--border);font-size:12px;color:var(--dim);line-height:1.8}
+.side-foot b{color:var(--accent);font-family:var(--mono);font-weight:600}
+
+/* 工具区 */
+.main{flex:1;min-width:0}
+.result-bar{display:flex;align-items:baseline;gap:10px;margin-bottom:14px;font-size:13px;color:var(--dim)}
+.result-bar .count{color:var(--text);font-weight:600}
+.result-bar .clear{
+  margin-left:auto;color:var(--accent);font-size:13px;padding:4px 8px;border-radius:6px;
+}
+.result-bar .clear:hover{background:var(--accent-soft)}
+
+.grid{display:grid;grid-template-columns:1fr;gap:12px}
+
+/* 工具卡片 */
+.card{
+  display:flex;flex-direction:column;gap:10px;
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  padding:16px;min-width:0;position:relative;
+  transition:border-color .15s ease,transform .15s ease;
+}
+.card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.card-top{display:flex;align-items:center;gap:12px;min-width:0}
+.card-logo{
+  width:42px;height:42px;border-radius:10px;flex:none;
+  display:grid;place-items:center;
+  font-size:17px;font-weight:700;color:var(--accent);
+  background:var(--accent-soft);border:1px solid rgba(79,209,197,.25);
+}
+.card-title{font-size:15px;font-weight:700;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.card-title a{display:block;min-width:0}
+.card-title a:hover{color:var(--accent)}
+.card-desc{font-size:13px;color:var(--dim);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.6em}
+.card-tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-size:11px;color:var(--dim);background:var(--surface-2);border:1px solid var(--border);border-radius:999px;padding:2px 9px;font-family:var(--mono)}
+.card-foot{display:flex;align-items:center;justify-content:space-between;margin-top:auto}
+.card-link{font-size:13px;color:var(--accent);display:inline-flex;align-items:center;gap:4px}
+.card-link:hover{text-decoration:underline}
+.fav-btn{
+  width:32px;height:32px;border-radius:8px;display:grid;place-items:center;
+  color:var(--dim);transition:color .15s ease,background .15s ease;
+}
+.fav-btn:hover{background:var(--surface-2);color:var(--star)}
+.fav-btn[aria-pressed="true"]{color:var(--star)}
+
+/* 信息流广告卡（混排在网格里，视觉与工具卡区分） */
+.ad-slot.ad-infeed{flex-direction:column;gap:6px;border-style:dashed;min-height:150px}
+.ad-slot.ad-infeed .ad-size{font-family:var(--mono);font-size:11px;opacity:.75}
+
+/* 空态 */
+.empty{
+  grid-column:1/-1;text-align:center;padding:56px 16px;color:var(--dim);
+  border:1px dashed var(--border);border-radius:var(--radius);
+}
+.empty .reset{margin-top:14px;display:inline-block;color:var(--accent);padding:8px 18px;border:1px solid var(--accent);border-radius:999px;font-size:14px}
+.empty .reset:hover{background:var(--accent-soft)}
+
+/* ===== 页脚 ===== */
+.site-footer{border-top:1px solid var(--border);padding:20px 0 36px}
+.foot-inner{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;font-size:13px;color:var(--dim)}
+.foot-inner a{color:var(--dim)}
+.foot-inner a:hover{color:var(--accent)}
+
+/* ===== 窄屏适配（375px 优先，桌面扩展） ===== */
+@media (max-width:768px){
+  .sidebar{width:100%}
+  .cat-list{flex-direction:row;overflow-x:auto;gap:6px;padding-bottom:8px;-webkit-overflow-scrolling:touch}
+  .cat-btn{flex:none}
+  .layout{flex-direction:column;gap:6px}
+  .brand-sub{display:none}
+}
+@media (min-width:480px){
+  .grid{grid-template-columns:repeat(2,1fr)}
+}
+@media (min-width:900px){
+  .grid{grid-template-columns:repeat(3,1fr)}
+}
+@media (min-width:1180px){
+  .grid{grid-template-columns:repeat(4,1fr)}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition:none!important;animation:none!important;scroll-behavior:auto!important}
+  .card:hover{transform:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ===== 视图：顶栏 + 搜索 + 顶部广告 ===== -->
+<header class="site-header" id="top">
+  <div class="wrap">
+    <div class="header-row">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4FD1C5" stroke-width="2" stroke-linecap="round">
+            <circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.4" fill="#4FD1C5" stroke="none"/>
+          </svg>
+        </span>
+        <span>
+          <h1 class="brand-name">AI 工具导航</h1>
+          <span class="brand-sub">TOOLNAV</span>
+        </span>
+      </div>
+      <label class="search-box">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8B9BB0" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>
+        </svg>
+        <input id="search" type="search" placeholder="搜索工具名称、简介或标签…" autocomplete="off">
+      </label>
+      <button class="fav-toggle" id="favToggle" aria-pressed="false">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 3.6 14.6 8.9l5.7.8-4.1 4 .9 5.7-5.1-2.7-5.1 2.7.9-5.7-4.1-4 5.7-.8z"/>
+        </svg>
+        只看收藏
+      </button>
+    </div>
+    <!-- 广告位：顶部横幅 970x90 / 728x90（接入广告联盟后替换占位内容） -->
+    <div class="ad-slot" data-ad-slot="top-banner" aria-label="顶部横幅广告位">
+      <span class="ad-tag">广告</span>
+      <span>顶部横幅广告位 · 970×90 自适应</span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap layout">
+
+  <!-- ===== 视图：分类侧栏 ===== -->
+  <nav class="sidebar" aria-label="工具分类">
+    <div class="side-head">分类</div>
+    <div class="cat-list" id="catList"></div>
+    <div class="side-foot">
+      共收录 <b id="totalCount">0</b> 款工具<br>
+      已收藏 <b id="favCount">0</b> 款
+    </div>
+  </nav>
+
+  <!-- ===== 视图：工具网格 ===== -->
+  <section class="main" aria-label="工具列表">
+    <div class="result-bar">
+      <span>显示 <span class="count" id="resultCount">0</span> / <span id="allCount">0</span> 款</span>
+      <button class="clear" id="clearBtn" hidden>清除筛选</button>
+    </div>
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <!-- 广告位：侧栏/正文之间可插 300x250（本页按信息流混排实现） -->
+</main>
+
+<!-- ===== 视图：底部广告 + 页脚 ===== -->
+<div class="wrap">
+  <div class="ad-slot" data-ad-slot="bottom-banner" aria-label="底部横幅广告位">
+    <span class="ad-tag">广告</span>
+    <span>底部横幅广告位 · 728×90 自适应</span>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="wrap foot-inner">
+    <span>© <span id="year"></span> AI 工具导航 · 收录信息仅供参考，请以官网为准</span>
+    <span><a href="#" id="adPolicyLink">广告合作与接入说明</a> · <a href="#top">回到顶部</a></span>
+  </div>
+</footer>
+
+<script>
+/* =====================================================
+   数据：工具清单（新增工具按同一结构追加即可）
+   字段：name 名称 / desc 一句话简介 / url 官网 /
+        cat  分类 id / tags 标签数组
+   ===================================================== */
+var CATEGORIES = [
+  { id:'chat',        name:'对话助手' },
+  { id:'image',       name:'AI 绘图' },
+  { id:'video',       name:'AI 视频' },
+  { id:'audio',       name:'AI 音频' },
+  { id:'code',        name:'编程开发' },
+  { id:'office',      name:'办公效率' }
+];
+
+var TOOLS = [
+  /* ---- 对话助手 ---- */
+  {name:'ChatGPT',   desc:'OpenAI 官方对话助手，支持多模态、联网与插件生态。', url:'https://chatgpt.com', cat:'chat', tags:['对话','多模态','插件']},
+  {name:'Claude',    desc:'Anthropic 出品，长文本理解与深度推理能力突出。',     url:'https://claude.ai', cat:'chat', tags:['对话','长文本','推理']},
+  {name:'Gemini',    desc:'Google 多模态 AI 助手，深度集成 Workspace 生态。',  url:'https://gemini.google.com', cat:'chat', tags:['对话','多模态','Google']},
+  {name:'DeepSeek',  desc:'国产开源大模型，性价比高，推理能力出色。',           url:'https://chat.deepseek.com', cat:'chat', tags:['对话','开源','推理']},
+  {name:'Kimi',      desc:'月之暗面出品，擅长长文本阅读与联网检索。',           url:'https://kimi.moonshot.cn', cat:'chat', tags:['对话','长文本','检索']},
+  {name:'豆包',       desc:'字节跳动 AI 助手，覆盖创作、办公、搜索等场景。',     url:'https://www.doubao.com', cat:'chat', tags:['对话','创作','办公']},
+  {name:'Perplexity',desc:'AI 搜索引擎，回答自带来源引用，适合查证。',          url:'https://www.perplexity.ai', cat:'chat', tags:['搜索','引用','问答']},
+  {name:'Monica',     desc:'Monica.im 出品，浏览器 AI 助手，聚合多种大模型。',    url:'https://monica.im', cat:'chat', tags:['对话','浏览器','聚合']},
+  /* ---- AI 绘图 ---- */
+  {name:'Midjourney',        desc:'高品质 AI 绘图工具，艺术风格化表现力强。',        url:'https://www.midjourney.com', cat:'image', tags:['绘图','艺术']},
+  {name:'Stable Diffusion',  desc:'开源文生图模型，可本地部署，生态丰富。',          url:'https://stability.ai', cat:'image', tags:['绘图','开源','本地']},
+  {name:'DALL·E 3',          desc:'OpenAI 文生图模型，已集成于 ChatGPT。',           url:'https://openai.com/dall-e-3', cat:'image', tags:['绘图','OpenAI']},
+  {name:'Flux',              desc:'Black Forest Labs 出品，文字渲染与细节表现出色。', url:'https://blackforestlabs.ai', cat:'image', tags:['绘图','文字渲染']},
+  {name:'即梦',              desc:'字节跳动 AI 创作平台，支持图片与视频生成。',      url:'https://jimeng.jianying.com', cat:'image', tags:['绘图','视频','国内']},
+  {name:'Ideogram',          desc:'擅长文字与 Logo 生成的 AI 绘图工具。',            url:'https://ideogram.ai', cat:'image', tags:['绘图','文字','Logo']},
+  {name:'Adobe Firefly',     desc:'Adobe 创意套件内 AI 生成，商用授权友好。',        url:'https://firefly.adobe.com', cat:'image', tags:['绘图','商用','Adobe']},
+  /* ---- AI 视频 ---- */
+  {name:'Sora',     desc:'OpenAI 文生视频模型，擅长长镜头与物理模拟。',  url:'https://openai.com/sora', cat:'video', tags:['视频','OpenAI']},
+  {name:'Runway',   desc:'专业 AI 视频创作与编辑平台，特效丰富。',       url:'https://runwayml.com', cat:'video', tags:['视频','编辑']},
+  {name:'Pika',     desc:'轻量易用的 AI 视频生成工具，上手快。',         url:'https://pika.art', cat:'video', tags:['视频','轻量']},
+  {name:'可灵 Kling',desc:'快手出品，图生视频效果自然流畅。',             url:'https://klingai.com', cat:'video', tags:['视频','国内','图生视频']},
+  {name:'Vidu',     desc:'生数科技视频生成，支持参考图生视频。',         url:'https://www.vidu.cn', cat:'video', tags:['视频','国内']},
+  {name:'HeyGen',   desc:'AI 数字人视频与口播内容制作平台。',            url:'https://www.heygen.com', cat:'video', tags:['视频','数字人','口播']},
+  /* ---- AI 音频 ---- */
+  {name:'Suno',           desc:'AI 音乐生成，支持歌词与风格定制。',   url:'https://suno.com', cat:'audio', tags:['音乐','创作']},
+  {name:'Udio',           desc:'AI 音乐生成，音质细腻自然。',         url:'https://www.udio.com', cat:'audio', tags:['音乐']},
+  {name:'ElevenLabs',     desc:'顶级 AI 语音合成与克隆服务。',        url:'https://elevenlabs.io', cat:'audio', tags:['语音','TTS']},
+  {name:'天工SkyMusic',   desc:'昆仑万维 AI 音乐生成，支持中文创作。', url:'https://www.tiangong.cn', cat:'audio', tags:['音乐','国内']},
+  {name:'Kits.ai',        desc:'音色转换与 AI 声乐工具集。',          url:'https://www.kits.ai', cat:'audio', tags:['音乐','音色']},
+  {name:'Murf',           desc:'商用 AI 配音，多语言多音色可选。',    url:'https://murf.ai', cat:'audio', tags:['配音','商用']},
+  /* ---- 编程开发 ---- */
+  {name:'GitHub Copilot', desc:'GitHub 官方 AI 编程助手，IDE 内补全与对话。', url:'https://github.com/features/copilot', cat:'code', tags:['编程','补全','GitHub']},
+  {name:'Cursor',         desc:'AI 原生代码编辑器，代码库级智能。',          url:'https://cursor.com', cat:'code', tags:['编程','编辑器']},
+  {name:'Claude Code',    desc:'Anthropic 终端 AI 编程智能体。',             url:'https://www.anthropic.com/claude-code', cat:'code', tags:['编程','Agent','终端']},
+  {name:'Windsurf',       desc:'上下文感知的智能开发 IDE。',                 url:'https://windsurf.com', cat:'code', tags:['编程','IDE']},
+  {name:'通义灵码',        desc:'阿里云 AI 编程助手，支持多种 IDE 与语言。',   url:'https://tongyi.aliyun.com/lingma', cat:'code', tags:['编程','国内','IDE']},
+  {name:'v0',             desc:'Vercel 出品，对话式生成 UI 与前端页面。',     url:'https://v0.dev', cat:'code', tags:['编程','前端','UI']},
+  {name:'Bolt.new',       desc:'浏览器内全栈应用生成与预览。',                url:'https://bolt.new', cat:'code', tags:['编程','全栈','浏览器']},
+  /* ---- 办公效率 ---- */
+  {name:'Notion AI',  desc:'笔记与知识库内置 AI 助手，写作整理两不误。', url:'https://www.notion.so/product/ai', cat:'office', tags:['办公','笔记']},
+  {name:'Gamma',      desc:'AI 生成演示文稿与文档，一键成稿。',          url:'https://gamma.app', cat:'office', tags:['办公','PPT']},
+  {name:'NotebookLM', desc:'Google 资料理解工具，可生成音频概览。',      url:'https://notebooklm.google.com', cat:'office', tags:['办公','研究','Google']},
+  {name:'Grammarly',  desc:'AI 写作与语法润色，覆盖多语言。',            url:'https://www.grammarly.com', cat:'office', tags:['写作','润色']},
+  {name:'WPS AI',     desc:'金山办公 AI，文档/表格/演示一体化。',        url:'https://ai.wps.cn', cat:'office', tags:['办公','国内','文档']},
+  {name:'Coze 扣子',   desc:'字节 AI 应用与 Bot 搭建平台，低门槛。',      url:'https://www.coze.cn', cat:'office', tags:['办公','Agent','搭建']},
+  {name:'Dify',       desc:'开源 LLM 应用开发平台，支持自托管。',        url:'https://dify.ai', cat:'office', tags:['办公','开源','应用']}
+];
+
+/* =====================================================
+   状态与渲染
+   ===================================================== */
+var FAV_KEY = 'toolnav-favs';
+var state = { query:'', cat:'all', favOnly:false };
+
+function getFavs(){
+  try{ return JSON.parse(localStorage.getItem(FAV_KEY)) || []; }catch(e){ return []; }
+}
+function saveFavs(list){ localStorage.setItem(FAV_KEY, JSON.stringify(list)); }
+
+function toggleFav(id){
+  var list = getFavs();
+  var i = list.indexOf(id);
+  if(i >= 0){ list.splice(i,1); } else { list.push(id); }
+  saveFavs(list);
+  render();
+}
+
+function filteredTools(){
+  var q = state.query.trim().toLowerCase();
+  return TOOLS.filter(function(t){
+    if(state.cat !== 'all' && t.cat !== state.cat) return false;
+    if(state.favOnly && getFavs().indexOf(t.name) < 0) return false;
+    if(!q) return true;
+    var hay = (t.name + ' ' + t.desc + ' ' + t.tags.join(' ')).toLowerCase();
+    return hay.indexOf(q) >= 0;
+  });
+}
+
+function catName(id){
+  for(var i=0;i<CATEGORIES.length;i++){ if(CATEGORIES[i].id===id) return CATEGORIES[i].name; }
+  return id;
+}
+
+function renderCats(){
+  var list = [{id:'all',name:'全部'}].concat(CATEGORIES);
+  var html = '';
+  list.forEach(function(c){
+    var n = c.id==='all' ? TOOLS.length : TOOLS.filter(function(t){return t.cat===c.id;}).length;
+    var on = state.cat===c.id ? ' aria-pressed="true"' : '';
+    html += '<button class="cat-btn" data-cat="'+c.id+'"'+on+' role="tab">' +
+            '<span>'+c.name+'</span><span class="cat-count">'+n+'</span></button>';
+  });
+  document.getElementById('catList').innerHTML = html;
+}
+
+function renderGrid(){
+  var list = filteredTools();
+  var grid = document.getElementById('grid');
+  var html = '';
+  list.forEach(function(t, idx){
+    var fav = getFavs().indexOf(t.name) >= 0;
+    var letter = t.name.charAt(0).toUpperCase();
+    html += '<article class="card">' +
+      '<div class="card-top">' +
+        '<span class="card-logo" aria-hidden="true">'+letter+'</span>' +
+        '<h3 class="card-title"><a href="'+t.url+'" target="_blank" rel="noopener">'+t.name+'</a></h3>' +
+      '</div>' +
+      '<p class="card-desc">'+t.desc+'</p>' +
+      '<div class="card-tags">' + t.tags.map(function(x){return '<span class="tag">'+x+'</span>';}).join('') + '</div>' +
+      '<div class="card-foot">' +
+        '<span class="card-link"><a href="'+t.url+'" target="_blank" rel="noopener">访问官网</a></span>' +
+        '<button class="fav-btn" data-fav="'+t.name+'" aria-pressed="'+fav+'" aria-label="收藏 '+t.name+'">' +
+          '<svg width="16" height="16" viewBox="0 0 24 24" fill="'+(fav?'currentColor':'none')+'" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.6 14.6 8.9l5.7.8-4.1 4 .9 5.7-5.1-2.7-5.1 2.7.9-5.7-4.1-4 5.7-.8z"/></svg>' +
+        '</button>' +
+      '</div>' +
+    '</article>';
+    /* 信息流广告：每 8 个卡片后插入一条原生广告卡 */
+    if((idx+1) % 8 === 0){
+      html += '<div class="ad-slot ad-infeed" data-ad-slot="infeed" aria-label="信息流广告位">' +
+        '<span class="ad-tag">广告</span>' +
+        '<span>信息流广告位 · 300×250</span>' +
+        '<span class="ad-size">接入广告联盟后替换本容器</span>' +
+      '</div>';
+    }
+  });
+
+  if(!list.length){
+    html = '<div class="empty">没有找到匹配的工具，换个关键词或分类试试。<br>' +
+           '<button class="reset" id="resetBtn">清除全部筛选</button></div>';
+  }
+  grid.innerHTML = html;
+
+  document.getElementById('resultCount').textContent = list.length;
+  document.getElementById('allCount').textContent = TOOLS.length;
+  document.getElementById('totalCount').textContent = TOOLS.length;
+  document.getElementById('favCount').textContent = getFavs().length;
+  document.getElementById('clearBtn').hidden = (state.query || state.cat!=='all' || state.favOnly) ? false : true;
+}
+
+function render(){
+  renderCats();
+  renderGrid();
+  document.getElementById('favToggle').setAttribute('aria-pressed', state.favOnly ? 'true' : 'false');
+}
+
+/* ===== 事件绑定 ===== */
+document.addEventListener('click', function(e){
+  var catBtn = e.target.closest('.cat-btn');
+  if(catBtn){ state.cat = catBtn.getAttribute('data-cat'); render(); return; }
+  var favBtn = e.target.closest('.fav-btn');
+  if(favBtn){ toggleFav(favBtn.getAttribute('data-fav')); return; }
+  if(e.target.closest('#favToggle')){ state.favOnly = !state.favOnly; render(); return; }
+  if(e.target.closest('#clearBtn') || e.target.closest('#resetBtn')){ resetFilters(); }
+});
+
+document.getElementById('search').addEventListener('input', function(){
+  var self = this;
+  clearTimeout(self._t);
+  self._t = setTimeout(function(){ state.query = self.value; render(); }, 200);
+});
+
+function resetFilters(){
+  state = { query:'', cat:'all', favOnly:false };
+  document.getElementById('search').value = '';
+  render();
+}
+
+document.getElementById('adPolicyLink').addEventListener('click', function(e){
+  e.preventDefault();
+  alert('广告接入说明：\n\n本站已预留三类广告位（顶部横幅、信息流、底部横幅），统一使用 .ad-slot 容器。\n接入 Google AdSense / 百度联盟时：\n1. 在 <head> 引入广告联盟脚本；\n2. 将各 .ad-slot 占位内容替换为广告单元代码（<ins class="adsbygoogle"> 或联盟广告位标签）；\n3. 删除或保留 .ad-tag 角标均可。\n详见仓库 README.md 与 ads.txt。');
+});
+
+document.getElementById('year').textContent = new Date().getFullYear();
+render();
+</script>
+</body>
+</html>

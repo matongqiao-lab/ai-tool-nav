@@ -1,0 +1,4 @@
+# ads.txt 广告联盟声明文件
+# 接入广告联盟后，将下方注释替换为对应平台的声明行，例如：
+# google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
+# 未接入广告联盟时保留本文件即可，无需任何操作。
